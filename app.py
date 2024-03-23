@@ -26,11 +26,16 @@ def hifigan_wavlm(pretrained=True, progress=True, prematched=True, device='cuda'
 
     if pretrained:
         if prematched:
-            model_path = "/content/drive/MyDrive/g_02500000.pt"
+            model_path = "https://github.com/HninLwin-byte/Alaryn_Enhancement_App/releases/download/Checkpoints/prematch_g_02500000.pt"
         else:
             model_path = "/content/drive/MyDrive/do_00000040.pt"
 
-        state_dict_g = torch.load(model_path, map_location=device)
+        
+        state_dict_g = torch.hub.load_state_dict_from_url(
+            url,
+            map_location=device,
+            progress=progress
+        )
         generator.load_state_dict(state_dict_g['generator'])
 
     generator.eval()
