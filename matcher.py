@@ -11,17 +11,11 @@ from hifigan.utils import AttrDict
 from torch import Tensor
 from torchaudio.sox_effects import apply_effects_tensor
 from wavlm.WavLM import WavLM
+from knnvc_utils import generate_matrix_from_index
 
 
-SPEAKER_INFORMATION_WEIGHTS = [
-    0, 0, 0, 0, 0, 0,  # layer 0-5
-    1.0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, # layer 15
-    0, 0, 0, 0, 0, 0, # layer 16-21
-    0, # layer 22 
-    0, 0 # layer 23-24
-]
 SPEAKER_INFORMATION_LAYER = 6
+SPEAKER_INFORMATION_WEIGHTS = generate_matrix_from_index(SPEAKER_INFORMATION_LAYER)
 
 
 def fast_cosine_dist(source_feats: Tensor, matching_pool: Tensor, device: str = 'cpu') -> Tensor:
@@ -96,17 +90,24 @@ class KNeighborsVC(nn.Module):
             x: Tensor = path
             sr = self.sr
             if x.dim() == 1: x = x[None]
-        assert sr == self.sr, f"input audio sample rate must be 16kHz. Got {sr}"
-        
+                
+        if not sr == self.sr :
+            print(f"resample {sr} to {self.sr} in {path}")
+            x = torchaudio.functional.resample(x, orig_freq=sr, new_freq=self.sr)
+            sr = self.sr
+            
         # trim silence from front and back
         if vad_trigger_level > 1e-3:
             transform = T.Vad(sample_rate=sr, trigger_level=vad_trigger_level)
             x_front_trim = transform(x)
-            waveform_reversed, sr = apply_effects_tensor(x_front_trim, sr, [["reverse"]])
+            # original way, disabled because it lacks windows support
+            #waveform_reversed, sr = apply_effects_tensor(x_front_trim, sr, [["reverse"]])
+            waveform_reversed = torch.flip(x_front_trim, (-1,))
             waveform_reversed_front_trim = transform(waveform_reversed)
-            waveform_end_trim, sr = apply_effects_tensor(
-                waveform_reversed_front_trim, sr, [["reverse"]]
-            )
+            waveform_end_trim = torch.flip(waveform_reversed_front_trim, (-1,))
+            #waveform_end_trim, sr = apply_effects_tensor(
+            #    waveform_reversed_front_trim, sr, [["reverse"]]
+            #)
             x = waveform_end_trim
 
         # extract the representation of each layer
