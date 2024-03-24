@@ -14,7 +14,7 @@ from wavlm.WavLM import WavLM
 from knnvc_utils import generate_matrix_from_index
 
 
-SPEAKER_INFORMATION_LAYER = 6
+SPEAKER_INFORMATION_LAYER = 23
 SPEAKER_INFORMATION_WEIGHTS = generate_matrix_from_index(SPEAKER_INFORMATION_LAYER)
 
 
