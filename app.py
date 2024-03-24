@@ -12,7 +12,7 @@ import io
 import numpy as np
 from audio_recorder_streamlit import audio_recorder
 
-def hifigan_wavlm(pretrained=True, progress=True, prematched=True, device='cuda') -> HiFiGAN:
+def hifigan_wavlm(pretrained=True, progress=True, prematched=True, device='cpu') -> HiFiGAN:
     """ Load pretrained HiFiGAN trained to vocode WavLM features. Optionally use weights trained on `prematched` data. """
     cp = Path.cwd().absolute()
 
@@ -43,7 +43,7 @@ def hifigan_wavlm(pretrained=True, progress=True, prematched=True, device='cuda'
     print(f"[HiFiGAN] Generator loaded with {sum([p.numel() for p in generator.parameters()]):,d} parameters.")
     return generator, h
 
-def wavlm_large(pretrained=True, progress=True, device='cuda') -> WavLM:
+def wavlm_large(pretrained=True, progress=True, device='cpu') -> WavLM:
     if torch.cuda.is_available() == False:
         if str(device) != 'cpu':
             logging.warning(f"Overriding device {device} to cpu since no GPU is available.")
@@ -96,7 +96,7 @@ def main():
               f.write(src_wav_file.getvalue())
 
          
-          knnvc_model = knn_vc(pretrained=True, progress=True, prematched=True, device='cuda')
+          knnvc_model = knn_vc(pretrained=True, progress=True, prematched=True, device='cpu')
 
           # Get features from the source WAV file
           query_seq = knnvc_model.get_features(src_wav_path)
@@ -126,7 +126,7 @@ def main():
          if src_audio_data:
             st.audio(src_audio_data, format="audio/wav")
 
-         knnvc_model = knn_vc(pretrained=True, progress=True, prematched=True, device='cuda')
+         knnvc_model = knn_vc(pretrained=True, progress=True, prematched=True, device='cpu')
 
           # Get features from the source WAV file
          query_seq = knnvc_model.get_features(src_wav_path)
