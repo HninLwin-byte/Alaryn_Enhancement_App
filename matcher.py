@@ -55,7 +55,9 @@ class KNeighborsVC(nn.Module):
         self.sr = self.h.sampling_rate
         self.hop_length = 320
 
-    def get_matching_set(self, wavs: list[Path] | list[Tensor], weights=None, vad_trigger_level=7) -> Tensor:
+    # def get_matching_set(self, wavs: list[Path] | list[Tensor], weights=None, vad_trigger_level=7) -> Tensor:
+    def get_matching_set(self, wavs: Union[list[Path], list[Tensor]], weights=None, vad_trigger_level=7) -> Tensor:
+
         """ Get concatenated wavlm features for the matching set using all waveforms in `wavs`, 
         specified as either a list of paths or list of loaded waveform tensors of 
         shape (channels, T), assumed to be of 16kHz sample rate.
