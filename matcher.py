@@ -137,7 +137,8 @@ class KNeighborsVC(nn.Module):
               topk: int = 4, tgt_loudness_db: float = -16,
 
 
-              target_duration: float | None = None, device: str | None = None) -> Tensor:
+              # target_duration: float | None = None, device: str | None = None) -> Tensor:
+              target_duration: Union[float, None] = None, device: Union[str, None] = None) -> Tensor:
         """ Given `query_seq`, `matching_set`, and `synth_set` tensors of shape (N, dim), perform kNN regression matching
         with k=`topk`. Inputs:
             - `query_seq`: Tensor (N1, dim) of the input/source query features.
