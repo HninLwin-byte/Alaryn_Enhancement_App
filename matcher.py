@@ -131,7 +131,9 @@ class KNeighborsVC(nn.Module):
 
     @torch.inference_mode()
     def match(self, query_seq: Tensor, matching_set: Tensor, synth_set: Tensor = None, 
-              topk: int = 4, tgt_loudness_db: float | None = -16,
+              # topk: int = 4, tgt_loudness_db: float | None = -16,
+              topk: int = 4, tgt_loudness_db: float, None = -16,
+
               target_duration: float | None = None, device: str | None = None) -> Tensor:
         """ Given `query_seq`, `matching_set`, and `synth_set` tensors of shape (N, dim), perform kNN regression matching
         with k=`topk`. Inputs:
