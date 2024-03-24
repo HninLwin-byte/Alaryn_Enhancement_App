@@ -132,7 +132,7 @@ def main():
          query_seq = knnvc_model.get_features(src_wav_path)
 
           # Load reference file from the local machine
-         reference_file_path = "/content/drive/MyDrive/con_layer22_data/final_features.pt"
+         reference_file_path = "https://github.com/HninLwin-byte/Alaryn_Enhancement_App/releases/download/Checkpoints/final_features.pt"
          loaded_data = torch.load(reference_file_path)
 
           # Match query sequence with loaded data
