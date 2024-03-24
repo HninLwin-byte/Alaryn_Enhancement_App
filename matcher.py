@@ -57,6 +57,7 @@ class KNeighborsVC(nn.Module):
         self.hop_length = 320
 
     # def get_matching_set(self, wavs: list[Path] | list[Tensor], weights=None, vad_trigger_level=7) -> Tensor:
+    # def get_matching_set(self, wavs: Union[list[Path], list[Tensor]], weights=None, vad_trigger_level=7) -> Tensor:
     def get_matching_set(self, wavs: Union[list[Path], list[Tensor]], weights=None, vad_trigger_level=7) -> Tensor:
 
         """ Get concatenated wavlm features for the matching set using all waveforms in `wavs`, 
