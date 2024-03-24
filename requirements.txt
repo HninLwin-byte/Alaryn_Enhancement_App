@@ -1,0 +1,5 @@
+streamlit
+numpy
+torch
+torchaudio
+audio_recorder_streamlit
